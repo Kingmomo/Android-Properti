@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycleview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="@dimen/spacing_medium"
+            android:gravity="center|right"
+            android:orientation="horizontal"
+            android:textAlignment="center">
+
+            <Button
+                android:id="@+id/filtersort"
+                android:layout_width="120dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:background="@drawable/btn_rounded_blue"
+                android:drawableStart="@drawable/ic_filter"
+                android:gravity="center"
+                android:paddingStart="@dimen/spacing_large"
+                android:paddingEnd="@dimen/spacing_large"
+                android:text="Filter"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+                android:textColor="@android:color/white" />
+
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+</LinearLayout>

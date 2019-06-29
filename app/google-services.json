@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "923110205397",
+    "firebase_url": "https://properti-29892.firebaseio.com",
+    "project_id": "properti-29892",
+    "storage_bucket": "properti-29892.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:923110205397:android:269a766ebba03bed",
+        "android_client_info": {
+          "package_name": "com.darmajaya.joo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "923110205397-os9mjhlnsqggbqib17eom2hn2m840jqi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.darmajaya.joo",
+            "certificate_hash": "d901716ec210b5b45780d46fa5e0d7dd603ad100"
+          }
+        },
+        {
+          "client_id": "923110205397-1otq59bs86nircg543lpl4bqmnkmk838.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDiYQ38AHD1HR-QbIPLYLes7W9U-wSErnc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "923110205397-1otq59bs86nircg543lpl4bqmnkmk838.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
