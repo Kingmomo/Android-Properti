@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -26,6 +27,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import es.dmoral.toasty.Toasty;
+
 public class CartFragment extends Fragment {
 
     FragmentActivity listener;
@@ -36,13 +39,12 @@ public class CartFragment extends Fragment {
     private int mSubTotal = 0;
 
 
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof Activity) {
             this.listener = (FragmentActivity) context;
-            ((AppCompatActivity)context).getSupportActionBar().setTitle("Keranjang Belanja");
+            ((AppCompatActivity) context).getSupportActionBar().setTitle("Keranjang Belanja");
 
         }
     }
@@ -56,7 +58,7 @@ public class CartFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Keranjang Belanja");
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Keranjang Belanja");
 
         sharedPreference = new MySharedPreference(getActivity());
         GsonBuilder builder = new GsonBuilder();
@@ -66,6 +68,23 @@ public class CartFragment extends Fragment {
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycleview);
         final TextView total = view.findViewById(R.id.total);
+        TextView checkout = view.findViewById(R.id.checkout);
+        checkout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (productList.size() > 0) {
+                    TransaksiFragment fragment = new TransaksiFragment();
+                    Bundle args = new Bundle();
+                    args.putString("total", total.getText().toString());
+                    fragment.setArguments(args);
+                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
+
+                } else {
+                    Toasty.warning(getActivity(), "Keranjang Kosong", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
 
         recyclerView.setNestedScrollingEnabled(false);
         LinearLayoutManager mGrid = new LinearLayoutManager(getActivity());
@@ -92,7 +111,9 @@ public class CartFragment extends Fragment {
 
     private List<Produk> convertObjectArrayToListObject(Produk[] allProducts) {
         List<Produk> mProduct = new ArrayList<Produk>();
-        Collections.addAll(mProduct, allProducts);
+        if (allProducts != null) {
+            Collections.addAll(mProduct, allProducts);
+        }
         return mProduct;
     }
 
@@ -100,7 +121,7 @@ public class CartFragment extends Fragment {
         int totalCost = 0;
         for (int i = 0; i < mProducts.size(); i++) {
             Produk pObject = mProducts.get(i);
-            totalCost += (Integer.parseInt(pObject.getHarga())* pObject.getJumlah());
+            totalCost += (Integer.parseInt(pObject.getHarga()) * pObject.getJumlah());
         }
         return totalCost;
     }
@@ -109,11 +130,16 @@ public class CartFragment extends Fragment {
     public void onResume() {
         super.onResume();
         adapter.notifyDataSetChanged();
+        invalidateCart();
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         this.listener = null;
+    }
+
+    private void invalidateCart() {
+        getActivity().invalidateOptionsMenu();
     }
 }

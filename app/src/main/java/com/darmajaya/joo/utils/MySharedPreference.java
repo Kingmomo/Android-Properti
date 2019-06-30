@@ -24,6 +24,7 @@ public class MySharedPreference {
     public String retrieveProductFromCart(){
         return prefs.getString(Constants.PRODUCT_ID, "");
     }
+
     public void deleteProductFromCart(){
         SharedPreferences.Editor edits = prefs.edit();
         edits.remove(Constants.PRODUCT_ID).apply();
@@ -37,6 +38,36 @@ public class MySharedPreference {
 
     public String getUid() {
         return prefs.getString(Constants.SHARED_UID, "");
+    }
+
+    public void setNama(String uid) {
+        SharedPreferences.Editor edits = prefs.edit();
+        edits.putString(Constants.NAMA, uid);
+        edits.apply();
+    }
+
+    public String getNama() {
+        return prefs.getString(Constants.NAMA, "");
+    }
+
+    public void setAlamat(String uid) {
+        SharedPreferences.Editor edits = prefs.edit();
+        edits.putString(Constants.ALAMAT, uid);
+        edits.apply();
+    }
+
+    public String getAlamat() {
+        return prefs.getString(Constants.ALAMAT, "");
+    }
+
+    public void setNotelp(String uid) {
+        SharedPreferences.Editor edits = prefs.edit();
+        edits.putString(Constants.NO_TELP, uid);
+        edits.apply();
+    }
+
+    public String getNotelp() {
+        return prefs.getString(Constants.NO_TELP, "");
     }
 
     public void addProductCount(int productCount){
@@ -64,6 +95,5 @@ public class MySharedPreference {
         SharedPreferences.Editor edits = prefs.edit();
         edits.clear().commit();
     }
-
 
 }

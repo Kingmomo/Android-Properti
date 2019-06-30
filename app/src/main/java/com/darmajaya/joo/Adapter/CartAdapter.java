@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.darmajaya.joo.Model.Produk;
+import com.darmajaya.joo.ProdukActivity;
 import com.darmajaya.joo.R;
 import com.darmajaya.joo.utils.MySharedPreference;
 import com.google.gson.Gson;
@@ -48,7 +50,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final CartAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final CartAdapter.MyViewHolder holder, final int position) {
         sharedPreference = new MySharedPreference(context);
         GsonBuilder builder = new GsonBuilder();
 
@@ -59,7 +61,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
         final long harga = Long.parseLong(produk.getHarga());
         Locale localeID = new Locale("in", "ID");
         final NumberFormat formatRupiah = NumberFormat.getCurrencyInstance(localeID);
-        holder.harga.setText(formatRupiah.format(Double.parseDouble(String.valueOf(harga*produk.getJumlah()))));
+        holder.harga.setText(formatRupiah.format(Double.parseDouble(String.valueOf(harga * produk.getJumlah()))));
         holder.nama.setText(produk.getNama_produk());
         holder.jumlah.setText(String.valueOf(produk.getJumlah()));
         Glide.with(context)
@@ -74,8 +76,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
         holder.tambah.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(produk.getJumlah() >= 1){
-                    produk.setJumlah(produk.getJumlah()+1);
+                if (produk.getJumlah() >= 1) {
+                    produk.setJumlah(produk.getJumlah() + 1);
                     List<Produk> checkdata = checkdata(produk, +1);
                     String addAndStoreNewProduct = gson.toJson(checkdata);
                     sharedPreference.deleteProductFromCart();
@@ -83,7 +85,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
                 }
 
                 holder.jumlah.setText(String.valueOf(produk.getJumlah()));
-                holder.harga.setText(formatRupiah.format(Double.parseDouble(String.valueOf(harga*produk.getJumlah()))));
+                holder.harga.setText(formatRupiah.format(Double.parseDouble(String.valueOf(harga * produk.getJumlah()))));
                 doButtonOneClickActions(produkList);
 
 
@@ -93,18 +95,42 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
         holder.kurang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(produk.getJumlah() > 1){
-                    produk.setJumlah(produk.getJumlah()-1);
+                if (produk.getJumlah() > 1) {
+                    produk.setJumlah(produk.getJumlah() - 1);
                     List<Produk> checkdata = checkdata(produk, -1);
                     String addAndStoreNewProduct = gson.toJson(checkdata);
                     sharedPreference.deleteProductFromCart();
                     sharedPreference.addProductToTheCart(addAndStoreNewProduct);
                 }
                 holder.jumlah.setText(String.valueOf(produk.getJumlah()));
-                holder.harga.setText(formatRupiah.format(Double.parseDouble(String.valueOf(harga*produk.getJumlah()))));
+                holder.harga.setText(formatRupiah.format(Double.parseDouble(String.valueOf(harga * produk.getJumlah()))));
                 doButtonOneClickActions(produkList);
 
 
+            }
+        });
+
+        holder.hapus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                produkList.remove(position);
+                notifyItemRemoved(position);
+                notifyItemRangeChanged(position, produkList.size());
+
+                GsonBuilder builder = new GsonBuilder();
+                Gson gson = builder.create();
+                sharedPreference = new MySharedPreference(context);
+
+                Produk[] addCartProducts = gson.fromJson(sharedPreference.retrieveProductFromCart(), Produk[].class);
+                List<Produk> allNewProduct = convertObjectArrayToListObject(addCartProducts);
+
+                allNewProduct.remove(position);
+                String addAndStoreNewProduct = gson.toJson(allNewProduct);
+                sharedPreference.deleteProductFromCart();
+                sharedPreference.addProductToTheCart(addAndStoreNewProduct);
+                sharedPreference.addProductCount(allNewProduct.size());
+                invalidateCart();
+                doButtonOneClickActions(produkList);
 
             }
         });
@@ -113,7 +139,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
 
     @Override
     public int getItemCount() {
-        return produkList.size();
+        if (produkList == null)
+            return 0;
+        else
+            return produkList.size();
     }
 
     private List<Produk> convertObjectArrayToListObject(Produk[] allProducts) {
@@ -131,7 +160,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
         int d = 0;
         while (d < mProduct.size()) {
             if (mProduct.get(d).getNama_produk().equals(produk.getNama_produk())) {
-                produks = new Produk(produk.getNama_produk(), produk.getFoto(), produk.getHarga(), produk.getDeskripsi(), (mProduct.get(d).getJumlah()+number));
+                produks = new Produk(produk.getNama_produk(), produk.getFoto(), produk.getHarga(), produk.getDeskripsi(), (mProduct.get(d).getJumlah() + number));
                 mProduct.remove(d);
                 break;
             }
@@ -139,7 +168,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
 
         }
 
-        mProduct.add(d,produks);
+        mProduct.add(d, produks);
 
 
         return mProduct;
@@ -150,6 +179,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
         ImageView gambar;
         TextView nama, harga, jumlah;
         ImageButton tambah, kurang;
+        Button hapus;
         View view;
 
         public MyViewHolder(@NonNull View itemView) {
@@ -161,6 +191,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
             gambar = view.findViewById(R.id.gambar);
             tambah = view.findViewById(R.id.tambah);
             kurang = view.findViewById(R.id.kurang);
+            hapus = view.findViewById(R.id.hapus);
         }
     }
 
@@ -188,5 +219,9 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
             mOnDataChangeListener.onDataChanged(getTotalPrice(mProducts));
         }
     }
+    private void invalidateCart() {
+        ((ProdukActivity) context).invalidateOptionsMenu();
+    }
+
 
 }

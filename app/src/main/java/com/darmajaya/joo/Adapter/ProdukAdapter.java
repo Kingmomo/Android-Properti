@@ -172,25 +172,6 @@ public class ProdukAdapter extends FirestoreRecyclerAdapter<Produk, ProdukAdapte
         return mProduct;
     }
 
-//    private void showDialogDeskripsi(String deskripsi) {
-//        final Dialog dialog = new Dialog(context);
-//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // before
-//        dialog.setContentView(R.layout.dialog_produk_deskripsi);
-//        TextView des = dialog.findViewById(R.id.deskripsi);
-//
-//        des.setText(deskripsi);
-//
-//        dialog.setCancelable(true);
-//        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-//        dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                dialog.cancel();
-//            }
-//        });
-//        dialog.show();
-//    }
-
 
 
     public void showDialogDeskripsi(String deskripsi) {

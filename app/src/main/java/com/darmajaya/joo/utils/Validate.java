@@ -1,7 +1,9 @@
 package com.darmajaya.joo.utils;
 
+import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.google.android.material.textfield.TextInputEditText;
@@ -47,5 +49,10 @@ public class Validate {
             focusView.requestFocus();
         }
         return cancel;
+    }
+
+    public static void dismissKeyboard(EditText editText, Context context) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
     }
 }

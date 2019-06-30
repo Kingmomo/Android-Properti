@@ -52,6 +52,17 @@
                     android:textColor="@color/grey_90"
                     android:textStyle="bold" />
 
+                <Button
+                    android:id="@+id/hapus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_small"
+                    android:text="Hapus"
+                    android:background="@drawable/btn_kotak_blue"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@android:color/white"
+                     />
+
 
             </LinearLayout>
 

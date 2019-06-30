@@ -15,21 +15,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.darmajaya.joo.Model.Produk;
 import com.darmajaya.joo.utils.MySharedPreference;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.util.List;
-
 public class ProdukActivity extends AppCompatActivity {
-    private RecyclerView recyclerView;
     private MySharedPreference sharedPreference;
-    private int cartProductNumber = 0;
     private Gson gson;
-    private List<Produk> produkList;
     private Toolbar toolbar;
 
 
@@ -66,7 +59,6 @@ public class ProdukActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_shop) {
-
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.setCustomAnimations(android.R.animator.fade_in,
                     android.R.animator.fade_out);
@@ -78,11 +70,6 @@ public class ProdukActivity extends AppCompatActivity {
                 fragmentManager.popBackStack();
 
             }
-
-//            Fragment childFragment = new CartFragment();
-//            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//
-//            transaction.replace(R.id.fragment_container, childFragment).commit();
 
             return true;
         }
