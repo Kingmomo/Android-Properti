@@ -1,7 +1,9 @@
 package com.darmajaya.joo;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
@@ -11,7 +13,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.darmajaya.joo.utils.MySharedPreference;
 import com.darmajaya.joo.utils.Validate;
@@ -29,6 +34,7 @@ public class LoginActivity extends AppCompatActivity {
     private MySharedPreference sharedPreference;
     private ProgressDialog pDialog;
     private FirebaseUser currentUser;
+    private TextInputEditText email;
 
 
     @Override
@@ -39,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
         sharedPreference = new MySharedPreference(this);
         pDialog = new ProgressDialog(this);
         mAuth = FirebaseAuth.getInstance();
+        email = findViewById(R.id.email);
 
         TextView sign_up = (TextView) findViewById(R.id.sign_up);
         TextView submit = findViewById(R.id.submit);
@@ -52,6 +59,9 @@ public class LoginActivity extends AppCompatActivity {
         garis.animate().alpha(100).setDuration(2000).setStartDelay(800).rotation(180);
         submit.startAnimation(frombottom);
         title.startAnimation(fromtop);
+        if (sharedPreference.getEmailSaved() != null){
+            email.setText(sharedPreference.getEmailSaved());
+        }
 
 
         submit.setOnClickListener(new View.OnClickListener() {
@@ -69,7 +79,9 @@ public class LoginActivity extends AppCompatActivity {
         });
 
 
+
     }
+
 
     private void proseslogin() {
         //  pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
@@ -77,8 +89,19 @@ public class LoginActivity extends AppCompatActivity {
         pDialog.setCancelable(false);
         // pDialog.setIndeterminate(false);
         pDialog.show();
-        TextInputEditText email = findViewById(R.id.email);
         TextInputEditText password = findViewById(R.id.password);
+        final AppCompatCheckBox checkbox = findViewById(R.id.checkbox);
+
+
+        if (checkbox.isChecked()) {
+            sharedPreference.setEmailSaved(email.getText().toString());
+
+        } else {
+            sharedPreference.setEmailSaved("");
+        }
+
+
+
         if (!Validate.cek(email) && !Validate.cek(password)) {
             mAuth.signInWithEmailAndPassword(email.getText().toString().toLowerCase(), password.getText().toString().trim())
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {

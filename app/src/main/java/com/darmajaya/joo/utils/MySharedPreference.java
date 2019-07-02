@@ -40,6 +40,27 @@ public class MySharedPreference {
         return prefs.getString(Constants.SHARED_UID, "");
     }
 
+    public void setEmailSaved(String uid) {
+        SharedPreferences.Editor edits = prefs.edit();
+        edits.putString(Constants.EMAILSAVED, uid);
+        edits.apply();
+    }
+
+    public String getEmailSaved() {
+        return prefs.getString(Constants.EMAILSAVED, "");
+    }
+
+    public void setLokasi(String uid) {
+        SharedPreferences.Editor edits = prefs.edit();
+        edits.putString(Constants.KOORDINAT, uid);
+        edits.apply();
+    }
+
+    public String getLokasi() {
+        return prefs.getString(Constants.KOORDINAT, "");
+    }
+
+
     public void setNama(String uid) {
         SharedPreferences.Editor edits = prefs.edit();
         edits.putString(Constants.NAMA, uid);

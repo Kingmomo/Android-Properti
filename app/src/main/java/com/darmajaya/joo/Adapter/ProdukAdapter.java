@@ -101,7 +101,7 @@ public class ProdukAdapter extends FirestoreRecyclerAdapter<Produk, ProdukAdapte
                     sharedPreference.addProductToTheCart(cartValue);
                     cartProductNumber = cartProductList.size();
                 } else {
-                    List<Produk> checkdata = checkdata(model,1);
+                    List<Produk> checkdata = checkdata(model, 1);
                     String addAndStoreNewProduct = gson.toJson(checkdata);
                     sharedPreference.deleteProductFromCart();
                     sharedPreference.addProductToTheCart(addAndStoreNewProduct);
@@ -158,7 +158,7 @@ public class ProdukAdapter extends FirestoreRecyclerAdapter<Produk, ProdukAdapte
         int d = 0;
         while (d < mProduct.size()) {
             if (mProduct.get(d).getNama_produk().equals(produk.getNama_produk())) {
-                produks = new Produk(produk.getNama_produk(), produk.getFoto(), produk.getHarga(), produk.getDeskripsi(), (mProduct.get(d).getJumlah()+number));
+                produks = new Produk(produk.getNama_produk(), produk.getFoto(), produk.getHarga(), produk.getDeskripsi(), (mProduct.get(d).getJumlah() + number));
                 mProduct.remove(d);
                 break;
             }
@@ -171,7 +171,6 @@ public class ProdukAdapter extends FirestoreRecyclerAdapter<Produk, ProdukAdapte
 
         return mProduct;
     }
-
 
 
     public void showDialogDeskripsi(String deskripsi) {
@@ -192,7 +191,6 @@ public class ProdukAdapter extends FirestoreRecyclerAdapter<Produk, ProdukAdapte
     private void invalidateCart() {
         ((ProdukActivity) context).invalidateOptionsMenu();
     }
-
 
 
 }

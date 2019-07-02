@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -35,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
         CardView produk = findViewById(R.id.produk);
         CardView profile = findViewById(R.id.profile);
         CardView history = findViewById(R.id.history);
+        CardView caraorder = findViewById(R.id.caraorder);
         Button sign_out = findViewById(R.id.sign_out);
 
         produk.setOnClickListener(new View.OnClickListener() {
@@ -58,12 +58,18 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, HistoryActivity.class));
             }
         });
+
+        caraorder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, CaraOrder.class));
+            }
+        });
+
         sign_out.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mAuth.signOut();
-                finish();
-                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                dialog();
             }
         });
 
@@ -93,6 +99,24 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        final DocumentReference docToko = db.collection("profil").document("dataprofil");
+        docToko.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        mySharedPreference.setLokasi(document.getString("kordinat"));
+                    } else {
+                        mySharedPreference.setLokasi("-5.422359, 105.258188");
+                    }
+                } else {
+                    mySharedPreference.setLokasi("-5.422359, 105.258188");
+                }
+            }
+        });
+
     }
 
 

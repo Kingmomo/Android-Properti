@@ -44,7 +44,6 @@ public class CartFragment extends Fragment {
         super.onAttach(context);
         if (context instanceof Activity) {
             this.listener = (FragmentActivity) context;
-            ((AppCompatActivity) context).getSupportActionBar().setTitle("Keranjang Belanja");
 
         }
     }
@@ -86,7 +85,6 @@ public class CartFragment extends Fragment {
             }
         });
 
-        recyclerView.setNestedScrollingEnabled(false);
         LinearLayoutManager mGrid = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mGrid);
         recyclerView.setHasFixedSize(true);

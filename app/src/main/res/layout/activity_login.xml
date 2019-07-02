@@ -123,12 +123,13 @@
                         android:layout_height="@dimen/spacing_middle" />
 
                     <androidx.appcompat.widget.AppCompatCheckBox
+                        android:id="@+id/checkbox"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="-4dp"
                         android:layout_marginRight="-4dp"
                         android:layout_marginTop="@dimen/spacing_middle"
-                        android:text="Keep me Signed in"
+                        android:text="Simpan Email"
                         android:textColor="@color/blue_600"
                         android:textStyle="bold"
                         android:theme="@style/Checkbox.Blue" />

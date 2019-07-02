@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.darmajaya.joo.utils.MySharedPreference;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -30,6 +31,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 @SuppressWarnings("unchecked")
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -39,17 +41,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private static final float DEFAULT_ZOOM = 15f;
-    private Button btnmaps;
+    private FloatingActionButton btnmaps;
     private GoogleMap mMap;
     private Boolean mLocationPermissionsGranted = false;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private LatLng garageLocation;
     private Marker marker;
+    private MySharedPreference mySharedPreference;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        mySharedPreference = new MySharedPreference(this);
+
 
         btnmaps = findViewById(R.id.btnmap);
         getLocationPermission();
@@ -74,11 +79,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         LatLng peta = new LatLng(-5.4219919, 105.2590389);
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(peta, 15f));
+        String[] exp = mySharedPreference.getLokasi().split(",");
 
+        LatLng latLng = new LatLng(Double.parseDouble(exp[0]), Double.parseDouble(exp[1]));
+        MarkerOptions options = new MarkerOptions()
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                .position(latLng)
+                .title("Lokasi Toko");
+
+        mMap.addMarker(options);
+
+        System.out.println("peta" +peta);
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                mMap.clear();
+                if(marker != null){
+                    marker.remove();
+                }
                 garageLocation = latLng;
                 moveCamera(latLng, DEFAULT_ZOOM);
             }
@@ -99,6 +116,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void moveCamera(LatLng latLng, float zoom) {
+
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
         MarkerOptions options = new MarkerOptions()
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))

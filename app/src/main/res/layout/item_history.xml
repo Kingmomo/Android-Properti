@@ -94,6 +94,7 @@
                     android:orientation="vertical">
 
                     <ImageView
+                        android:id="@+id/detail"
                         android:layout_width="match_parent"
                         android:layout_height="125dp"
                         android:paddingLeft="@dimen/spacing_large"
@@ -113,7 +114,7 @@
             </LinearLayout>
 
             <Button
-                android:id="@+id/notelp"
+                android:id="@+id/hubungi"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"

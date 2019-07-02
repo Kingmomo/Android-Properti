@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -37,18 +39,21 @@ public class HistoryFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(final View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-//        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Daftar Transaksi");
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Daftar Transaksi");
         mySharedPreference = new MySharedPreference(getActivity());
         recyclerView = (RecyclerView) view.findViewById(R.id.recycleview);
+        Button hubungi = view.findViewById(R.id.hubungi);
         recyclerView.setNestedScrollingEnabled(false);
         LinearLayoutManager mGrid = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mGrid);
         recyclerView.setHasFixedSize(true);
         starter();
 
+
     }
+
 
     private void starter() {
         Query query = FirebaseFirestore.getInstance().collection("transaksi").whereEqualTo("iduser", mySharedPreference.getUid()).orderBy("tanggal", Query.Direction.DESCENDING);

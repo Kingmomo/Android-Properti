@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
@@ -66,6 +67,8 @@ public class TransaksiFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Form Transaksi");
+
         setHasOptionsMenu(false);
         koordinat = view.findViewById(R.id.koordinat);
         final EditText total = view.findViewById(R.id.harga);
@@ -143,39 +146,50 @@ public class TransaksiFragment extends Fragment {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                pDialog.setMessage("Loading");
-                pDialog.setCancelable(false);
-                pDialog.show();
+                if (isEmpty(koordinat, nama, alamat, notelp)) {
+                    Toasty.warning(getActivity(), "Form tidak boleh kosong", Toast.LENGTH_SHORT).show();
+                } else {
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    pDialog.setMessage("Loading");
+                    pDialog.setCancelable(false);
+                    pDialog.show();
 
-                Transaksi transaksi = new Transaksi(mySharedPreference.getUid(), nama.getText().toString(), alamat.getText().toString(), notelp.getText().toString(), date.getText().toString(), koordinat.getText().toString(), total.getText().toString(), mySharedPreference.retrieveProductFromCart(), "Belum Di Konfirmasi");
+                    Transaksi transaksi = new Transaksi(mySharedPreference.getUid(), nama.getText().toString(), alamat.getText().toString(), notelp.getText().toString(), date.getText().toString(), koordinat.getText().toString(), total.getText().toString(), mySharedPreference.retrieveProductFromCart(), "Belum Di Konfirmasi");
 
-                db.collection("transaksi").document()
-                        .set(transaksi)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    Toasty.success(getActivity(), "Pemesanan Berhasil", Toast.LENGTH_LONG).show();
-                                    getActivity().finish();
-                                    startActivity(new Intent(getActivity(), LoginActivity.class));
-                                    pDialog.hide();
-                                } else {
+                    db.collection("transaksi").document()
+                            .set(transaksi)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Toasty.success(getActivity(), "Pemesanan Berhasil", Toast.LENGTH_LONG).show();
+                                        getActivity().finish();
+                                        startActivity(new Intent(getActivity(), LoginActivity.class));
+                                        pDialog.hide();
+                                    } else {
+                                        pDialog.hide();
+                                        Toasty.success(getActivity(), "Pemesanan Gagal", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
                                     pDialog.hide();
                                     Toasty.success(getActivity(), "Pemesanan Gagal", Toast.LENGTH_LONG).show();
                                 }
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                pDialog.hide();
-                                Toasty.success(getActivity(), "Pemesanan Gagal", Toast.LENGTH_LONG).show();
-                            }
-                        });
+                            });
+                }
             }
         });
 
+    }
+
+    private boolean isEmpty(EditText etText, EditText etText2, EditText etText3, EditText etText4) {
+        if (etText.getText().toString().trim().length() > 0 && etText2.getText().toString().trim().length() > 0 && etText3.getText().toString().trim().length() > 0 && etText4.getText().toString().trim().length() > 0)
+            return false;
+
+        return true;
     }
 
     @Override
