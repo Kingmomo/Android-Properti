@@ -1,9 +1,7 @@
 package com.darmajaya.joo;
 
-import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
@@ -15,8 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.cardview.widget.CardView;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.darmajaya.joo.utils.MySharedPreference;
 import com.darmajaya.joo.utils.Validate;
@@ -59,7 +55,7 @@ public class LoginActivity extends AppCompatActivity {
         garis.animate().alpha(100).setDuration(2000).setStartDelay(800).rotation(180);
         submit.startAnimation(frombottom);
         title.startAnimation(fromtop);
-        if (sharedPreference.getEmailSaved() != null){
+        if (sharedPreference.getEmailSaved() != null) {
             email.setText(sharedPreference.getEmailSaved());
         }
 
@@ -77,7 +73,6 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
             }
         });
-
 
 
     }
@@ -99,7 +94,6 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             sharedPreference.setEmailSaved("");
         }
-
 
 
         if (!Validate.cek(email) && !Validate.cek(password)) {

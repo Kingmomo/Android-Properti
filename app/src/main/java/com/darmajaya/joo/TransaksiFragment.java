@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,7 @@ import androidx.fragment.app.FragmentActivity;
 import com.darmajaya.joo.Model.Transaksi;
 import com.darmajaya.joo.utils.MySharedPreference;
 import com.darmajaya.joo.utils.Validate;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -154,7 +156,21 @@ public class TransaksiFragment extends Fragment {
                     pDialog.setCancelable(false);
                     pDialog.show();
 
-                    Transaksi transaksi = new Transaksi(mySharedPreference.getUid(), nama.getText().toString(), alamat.getText().toString(), notelp.getText().toString(), date.getText().toString(), koordinat.getText().toString(), total.getText().toString(), mySharedPreference.retrieveProductFromCart(), "Belum Di Konfirmasi");
+                    String[] exp = mySharedPreference.getLokasi().split(",");
+                    String[] expuser = koordinat.getText().toString().split(",");
+
+                    Location lokasitoko = new Location("point A");
+                    lokasitoko.setLatitude(Double.parseDouble(exp[0]));
+                    lokasitoko.setLongitude(Double.parseDouble(exp[1]));
+
+                    Location locationB = new Location("point B");
+                    locationB.setLatitude(Double.parseDouble(expuser[0]));
+                    locationB.setLongitude(Double.parseDouble(expuser[1]));
+
+                    double distance = lokasitoko.distanceTo(locationB)/1000;
+
+
+                    Transaksi transaksi = new Transaksi(mySharedPreference.getUid(), nama.getText().toString(), alamat.getText().toString(), notelp.getText().toString(), date.getText().toString(), koordinat.getText().toString(), total.getText().toString(), mySharedPreference.retrieveProductFromCart(), "Belum Di Konfirmasi", String.format("%.3f", distance), null);
 
                     db.collection("transaksi").document()
                             .set(transaksi)
@@ -164,7 +180,10 @@ public class TransaksiFragment extends Fragment {
                                     if (task.isSuccessful()) {
                                         Toasty.success(getActivity(), "Pemesanan Berhasil", Toast.LENGTH_LONG).show();
                                         getActivity().finish();
-                                        startActivity(new Intent(getActivity(), LoginActivity.class));
+                                        mySharedPreference.deleteProductdancount();
+                                        Intent intent = new Intent(getActivity(), Rekening_Activity.class);
+                                        intent.putExtra("total", total.getText().toString());
+                                        startActivity(intent);
                                         pDialog.hide();
                                     } else {
                                         pDialog.hide();
@@ -179,7 +198,11 @@ public class TransaksiFragment extends Fragment {
                                     Toasty.success(getActivity(), "Pemesanan Gagal", Toast.LENGTH_LONG).show();
                                 }
                             });
+
+
                 }
+
+
             }
         });
 

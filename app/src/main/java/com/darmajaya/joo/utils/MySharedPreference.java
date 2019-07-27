@@ -30,6 +30,12 @@ public class MySharedPreference {
         edits.remove(Constants.PRODUCT_ID).apply();
     }
 
+    public void deleteProductdancount(){
+        SharedPreferences.Editor edits = prefs.edit();
+        edits.remove(Constants.PRODUCT_ID).apply();
+        edits.remove(Constants.PRODUCT_COUNT).apply();
+    }
+
     public void setUid(String uid) {
         SharedPreferences.Editor edits = prefs.edit();
         edits.putString(Constants.SHARED_UID, uid);
@@ -59,7 +65,6 @@ public class MySharedPreference {
     public String getLokasi() {
         return prefs.getString(Constants.KOORDINAT, "");
     }
-
 
     public void setNama(String uid) {
         SharedPreferences.Editor edits = prefs.edit();
@@ -117,4 +122,33 @@ public class MySharedPreference {
         edits.clear().commit();
     }
 
+    public void setNamaRek(String uid) {
+        SharedPreferences.Editor edits = prefs.edit();
+        edits.putString(Constants.NAMAREK, uid);
+        edits.apply();
+    }
+
+    public String getNamaRek() {
+        return prefs.getString(Constants.NAMAREK, "");
+    }
+
+    public void setNoRek(String uid) {
+        SharedPreferences.Editor edits = prefs.edit();
+        edits.putString(Constants.NOREK, uid);
+        edits.apply();
+    }
+
+    public String gettNoRek() {
+        return prefs.getString(Constants.NOREK, "");
+    }
+
+    public void setATM(String uid) {
+        SharedPreferences.Editor edits = prefs.edit();
+        edits.putString(Constants.ATM, uid);
+        edits.apply();
+    }
+
+    public String getATM() {
+        return prefs.getString(Constants.ATM, "");
+    }
 }

@@ -6,11 +6,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.darmajaya.joo.utils.MySharedPreference;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -36,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
         CardView history = findViewById(R.id.history);
         CardView caraorder = findViewById(R.id.caraorder);
         Button sign_out = findViewById(R.id.sign_out);
+        final TextView namatoko = findViewById(R.id.namatoko);
+        final ImageView logo = findViewById(R.id.logo);
 
         produk.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
+
                         mySharedPreference.setNama(document.getString("nama"));
                         mySharedPreference.setAlamat(document.getString("alamat"));
                         mySharedPreference.setNotelp(document.getString("notelp"));
@@ -107,7 +114,18 @@ public class MainActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        mySharedPreference.setLokasi(document.getString("kordinat"));
+                        namatoko.setText(document.getString("nama_toko"));
+                        Glide.with(MainActivity.this)
+                                .load(document.get("foto_logo"))
+                                .apply(
+                                        new RequestOptions()
+                                                .placeholder(R.color.blue_800)
+                                                .fitCenter())
+                                .into(logo);                        mySharedPreference.setNama(document.getString("nama"));
+                        mySharedPreference.setLokasi(document.getString("koordinat"));
+                        mySharedPreference.setATM(document.getString("atm_bank"));
+                        mySharedPreference.setNamaRek(document.getString("atm_nama"));
+                        mySharedPreference.setNoRek(document.getString("atm_nomor"));
                     } else {
                         mySharedPreference.setLokasi("-5.422359, 105.258188");
                     }

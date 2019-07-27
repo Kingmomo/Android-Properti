@@ -25,6 +25,8 @@
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
+            android:layout_marginLeft="@dimen/spacing_medium"
+            android:src="@drawable/ic_arrow_upward"
             android:layout_marginRight="32dp"
             android:tint="#737373" />
 
@@ -53,6 +55,8 @@
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
+            android:layout_marginLeft="@dimen/spacing_medium"
+            android:src="@drawable/ic_arrow_downward"
             android:layout_marginRight="32dp"
             android:tint="#737373" />
 

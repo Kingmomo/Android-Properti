@@ -61,12 +61,14 @@
                 android:layout_height="1dp"
                 android:background="@color/grey_80" />
 
-            <TextView
-                android:id="@+id/deskripsi"
-                android:layout_width="wrap_content"
+            <Button
+                android:id="@+id/pembayaran"
+                android:background="@drawable/btn_rounded_blue"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="Lakukan Transfer ke no rekening "
-                android:textAppearance="@style/TextAppearance.AppCompat.Widget.DropDownItem"
+                android:text="Pembayaran"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="@android:color/white"
                 />
 
 

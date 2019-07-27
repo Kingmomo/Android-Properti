@@ -12,24 +12,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.darmajaya.joo.CartFragment;
 import com.darmajaya.joo.HistoryActivity;
 import com.darmajaya.joo.HistoryDetailFragment;
-import com.darmajaya.joo.Model.Produk;
+import com.darmajaya.joo.KonfirmasiActivity;
 import com.darmajaya.joo.Model.Transaksi;
 import com.darmajaya.joo.R;
-import com.darmajaya.joo.TransaksiFragment;
 import com.darmajaya.joo.utils.MySharedPreference;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class HistoryAdapter extends FirestoreRecyclerAdapter<Transaksi, HistoryAdapter.MyViewHolder> {
 
@@ -50,7 +43,7 @@ public class HistoryAdapter extends FirestoreRecyclerAdapter<Transaksi, HistoryA
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull MyViewHolder holder, int i, @NonNull final Transaksi model) {
+    protected void onBindViewHolder(@NonNull MyViewHolder holder, final int i, @NonNull final Transaksi model) {
         mySharedPreference = new MySharedPreference(context);
         holder.nama.setText(model.getNama());
         holder.total.setText(model.getTotal());
@@ -76,11 +69,22 @@ public class HistoryAdapter extends FirestoreRecyclerAdapter<Transaksi, HistoryA
 
             }
         });
+        if (model.getStatus().equals("Belum Di Konfirmasi"))   {
+            holder.konfirmasi.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, KonfirmasiActivity.class);
+                    intent.putExtra("konfirmasi", getSnapshots().getSnapshot(i).getId());
+                    context.startActivity(intent);
+                }
+            });
+        }
+
     }
 
-    private void dialup(View view){
+    private void dialup(View view) {
         Intent callIntent = new Intent(Intent.ACTION_VIEW);
-        callIntent.setData(Uri.parse("tel:"+mySharedPreference.getNotelp()));
+        callIntent.setData(Uri.parse("tel:" + mySharedPreference.getNotelp()));
         context.startActivity(callIntent);
     }
 
@@ -97,7 +101,7 @@ public class HistoryAdapter extends FirestoreRecyclerAdapter<Transaksi, HistoryA
         TextView nama, idtransaksi, total, tanggal, status;
         View view;
         ImageView detail;
-        Button hubungi;
+        Button hubungi, konfirmasi;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -109,6 +113,7 @@ public class HistoryAdapter extends FirestoreRecyclerAdapter<Transaksi, HistoryA
             tanggal = view.findViewById(R.id.tanggal);
             status = view.findViewById(R.id.status);
             hubungi = view.findViewById(R.id.hubungi);
+            konfirmasi = view.findViewById(R.id.konfirmasi);
         }
     }
 

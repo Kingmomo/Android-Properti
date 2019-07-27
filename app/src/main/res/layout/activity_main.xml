@@ -30,21 +30,24 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/spacing_xlarge" />
 
-                <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:tint="@color/blue_800"
-                    android:src="@drawable/ic_build" />
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/logo"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    app:civ_border_color="#FFF"
+                    app:civ_border_width="2dp"
+                    app:civ_circle_background_color="@android:color/white"
+                    app:layout_anchorGravity="bottom|center" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/spacing_large" />
 
                 <TextView
+                    android:id="@+id/namatoko"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="2dp"
-                    android:text="Joo Steel"
                     android:textAppearance="@style/TextAppearance.AppCompat.Title"
                     android:textColor="@color/blue_800" />
 

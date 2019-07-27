@@ -11,6 +11,9 @@ public class Constants {
     public static final String ALAMAT= "alamat";
     public static final String NO_TELP = "notelp";
     public static final String KOORDINAT = "koordinat";
+    public static final String NAMAREK = "namarek";
+    public static final String NOREK = "norek";
+    public static final String ATM = "atm";
 
 
 }

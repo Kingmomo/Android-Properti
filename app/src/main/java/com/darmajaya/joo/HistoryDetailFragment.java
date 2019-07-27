@@ -2,6 +2,7 @@ package com.darmajaya.joo;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,7 +42,7 @@ public class HistoryDetailFragment extends Fragment {
     private FirebaseFirestore db;
     private Gson gson;
     private List<Produk> productList;
-
+    private String name;
 
 
     FragmentActivity listener;
@@ -62,15 +63,15 @@ public class HistoryDetailFragment extends Fragment {
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Detail Transaksi");
         mySharedPreference = new MySharedPreference(getActivity());
         recyclerView = (RecyclerView) view.findViewById(R.id.recycleview);
-        final TextView deskripsi = view.findViewById(R.id.deskripsi);
-         TextView total = view.findViewById(R.id.total);
+        final TextView pembayaran = view.findViewById(R.id.pembayaran);
+        final TextView total = view.findViewById(R.id.total);
 
         GsonBuilder builder = new GsonBuilder();
         gson = builder.create();
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            String name = bundle.getString("total");
+            name = bundle.getString("total");
             String listproduk = bundle.getString("listproduk");
             total.setText(name);
             Produk[] addCartProducts = gson.fromJson(listproduk, Produk[].class);
@@ -80,6 +81,7 @@ public class HistoryDetailFragment extends Fragment {
             recyclerView.setHasFixedSize(true);
             adapter = new HistoryDetailAdapter(getActivity(), productList);
             recyclerView.setAdapter(adapter);
+
         }
 
 
@@ -93,8 +95,14 @@ public class HistoryDetailFragment extends Fragment {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        deskripsi.setText("Lakukan Transfer ke no rekening "+ document.get("atm_nomor") +" bank "+ document.get("atm_bank")+ " A.n " + document.get("atm_nama") + " dengan nominal yang tertera pada total harga");
-
+                        pembayaran.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(getActivity(), Rekening_Activity.class);
+                                intent.putExtra("total", name);
+                                startActivity(intent);
+                            }
+                        });
                     } else {
                     }
                 } else {

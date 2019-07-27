@@ -61,7 +61,7 @@ public class ProfileActivity extends AppCompatActivity {
                                                 .fitCenter())
                                 .into(imageprofile);
 
-                        namatoko.setText(document.get("nama_pemilik").toString());
+                        namatoko.setText(document.get("nama_toko").toString());
                         lokasi.setText(document.get("alamat").toString());
                         tentang.setText(document.get("deskripsi").toString());
                         kontak.setText(document.get("no_hp").toString());

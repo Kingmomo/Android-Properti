@@ -80,7 +80,6 @@ public class ProdukAdapter extends FirestoreRecyclerAdapter<Produk, ProdukAdapte
         NumberFormat formatRupiah = NumberFormat.getCurrencyInstance(localeID);
         holder.harga.setText(formatRupiah.format(Double.parseDouble(model.getHarga())));
 
-//      String id = adapter.getSnapshots().getSnapshot(position).getId();
 
 
         holder.beli.setOnClickListener(new View.OnClickListener() {

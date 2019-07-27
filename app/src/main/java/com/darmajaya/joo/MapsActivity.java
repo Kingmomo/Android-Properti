@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -89,18 +88,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         mMap.addMarker(options);
 
-        System.out.println("peta" +peta);
+        System.out.println("peta" + peta);
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                if(marker != null){
+                if (marker != null) {
                     marker.remove();
                 }
                 garageLocation = latLng;
                 moveCamera(latLng, DEFAULT_ZOOM);
             }
         });
-
 
 
         btnmaps.setOnClickListener(new View.OnClickListener() {
@@ -123,7 +121,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .position(latLng)
                 .title("Lokasi Saya");
         marker = mMap.addMarker(options);
-
 
 
     }
