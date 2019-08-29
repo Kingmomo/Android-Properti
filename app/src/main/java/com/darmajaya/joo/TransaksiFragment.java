@@ -43,7 +43,7 @@ import es.dmoral.toasty.Toasty;
 public class TransaksiFragment extends Fragment {
     FragmentActivity listener;
     private int MAP = 2;
-    private EditText koordinat;
+    private EditText koordinat, alamat;
     private Number number;
     private MySharedPreference mySharedPreference;
     private ProgressBar progress_bar;
@@ -73,9 +73,9 @@ public class TransaksiFragment extends Fragment {
 
         setHasOptionsMenu(false);
         koordinat = view.findViewById(R.id.koordinat);
+        alamat = view.findViewById(R.id.alamat);
         final EditText total = view.findViewById(R.id.harga);
         final EditText nama = view.findViewById(R.id.nama);
-        final EditText alamat = view.findViewById(R.id.alamat);
         final EditText notelp = view.findViewById(R.id.notelp);
         final EditText date = view.findViewById(R.id.date);
         Button submit = view.findViewById(R.id.btntransaksi);
@@ -198,8 +198,6 @@ public class TransaksiFragment extends Fragment {
                                     Toasty.success(getActivity(), "Pemesanan Gagal", Toast.LENGTH_LONG).show();
                                 }
                             });
-
-
                 }
 
 
@@ -224,8 +222,10 @@ public class TransaksiFragment extends Fragment {
             if (resultCode == Activity.RESULT_OK) {
                 double lat = (double) data.getDoubleExtra("location_lat", 0);
                 double lng = (double) data.getDoubleExtra("location_lng", 0);
-                System.out.println("mantap soul " + lat + " " + lng);
+                String alamatlokasi = (String) data.getStringExtra("alamat");
+                System.out.println("mantap soul " + lat + " " + lng + alamatlokasi);
                 koordinat.setText(String.valueOf(lat) + ", " + String.valueOf(lng));
+                alamat.setText(alamatlokasi);
             }
 
 

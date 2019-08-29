@@ -1,13 +1,44 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
-    <fragment
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
+
+    <RelativeLayout
+        android:id="@+id/relLayout1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="50dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="10dp"
+        android:background="@android:color/white"
+        android:elevation="10dp">
+
+
+        <TextView
+            android:id="@+id/input_search"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/ic_magnify"
+            android:gravity="center|left"
+            android:hint="Cari Lokasi"
+            android:imeOptions="actionSearch"
+            android:textColor="#000"
+            android:textSize="15sp" />
+
+        <ImageView
+            android:id="@+id/ic_magnify"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/ic_search"
+            android:backgroundTint="@color/blue_700" />
+
+    </RelativeLayout>
+
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btnmap"
@@ -15,9 +46,15 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
-        app:rippleColor="@color/blue_600"
+        android:src="@drawable/ic_location"
         app:backgroundTint="@color/blue_800"
-        android:src="@drawable/ic_location" />
+        app:rippleColor="@color/blue_600" />
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

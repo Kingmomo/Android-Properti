@@ -4,11 +4,17 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AutoCompleteTextView;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,6 +24,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.darmajaya.joo.utils.MySharedPreference;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -26,14 +35,27 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 @SuppressWarnings("unchecked")
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = "hahahaha";
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
@@ -47,18 +69,91 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private LatLng garageLocation;
     private Marker marker;
     private MySharedPreference mySharedPreference;
+    private AutoCompleteTextView inputsearch;
+    private AutoCompleteTextView mSearchText;
+    private GoogleApiClient mGoogleApiClient;
+    private static final LatLngBounds LAT_LNG_BOUNDS = new LatLngBounds(
+            new LatLng(-40, -168), new LatLng(71, 136));
+    private static final int PLACE_PICKER_REQUEST = 1;
+    private ImageView mGps, mInfo, mPlacePicker;
+    int AUTOCOMPLETE_REQUEST_CODE = 1;
+    private TextView input_search;
+    private String alamat;
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         mySharedPreference = new MySharedPreference(this);
-
-
         btnmaps = findViewById(R.id.btnmap);
+
+
+        btnmaps.setEnabled(false);
+
+        input_search = findViewById(R.id.input_search);
         getLocationPermission();
 
+        if (!Places.isInitialized()) {
+            Places.initialize(getApplicationContext(), "AIzaSyBdA6oOqF7pFdiWhl3SCNsnXZeAyDwivWI");
+        }
 
+
+        final List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.LAT_LNG, Place.Field.ADDRESS);
+
+        input_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Start the autocomplete intent.
+                input_search.setEnabled(false);
+
+                Intent intent = new Autocomplete.IntentBuilder(
+                        AutocompleteActivityMode.FULLSCREEN, fields)
+                        .build(MapsActivity.this);
+                startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
+            }
+        });
+
+
+        btnmaps.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = getIntent();
+                intent.putExtra("location_lat", garageLocation.latitude);
+                intent.putExtra("location_lng", garageLocation.longitude);
+                setResult(Activity.RESULT_OK, intent);
+                finish();
+            }
+        });
+
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Place place = Autocomplete.getPlaceFromIntent(data);
+                btnmaps.setEnabled(true);
+                input_search.setText(place.getAddress());
+                alamat = place.getAddress();
+                if (marker != null) {
+                    marker.remove();
+                }
+                moveCamera(place.getLatLng(), DEFAULT_ZOOM);
+                garageLocation = place.getLatLng();
+            } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+                // TODO: Handle the error.
+                Status status = Autocomplete.getStatusFromIntent(data);
+                Log.i(TAG, status.getStatusMessage());
+            } else if (resultCode == RESULT_CANCELED) {
+                // The user canceled the operation.
+            }
+        }
     }
 
     @Override
@@ -107,11 +202,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Intent intent = getIntent();
                 intent.putExtra("location_lat", garageLocation.latitude);
                 intent.putExtra("location_lng", garageLocation.longitude);
+                intent.putExtra("alamat", alamat);
                 setResult(Activity.RESULT_OK, intent);
                 finish();
             }
         });
+
+
     }
+
 
     private void moveCamera(LatLng latLng, float zoom) {
 
@@ -152,38 +251,35 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    private void getDeviceLocation() {
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        Log.d(TAG, "onRequestPermissionsResult: called.");
+        mLocationPermissionsGranted = false;
 
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-
-        try {
-            if (mLocationPermissionsGranted) {
-
-                final Task location = mFusedLocationProviderClient.getLastLocation();
-                Task completeListener = location.addOnCompleteListener(new OnCompleteListener() {
-                    @Override
-                    public void onComplete(@NonNull Task task) {
-                        if (task.isSuccessful()) {
-                            Location currentLocation = (Location) task.getResult();
-                            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), DEFAULT_ZOOM));
-                            MarkerOptions options = new MarkerOptions()
-                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-                                    .position(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()))
-                                    .title("Lokasi Saya");
-                            mMap.addMarker(options);
-
-                        } else {
-                            Toast.makeText(MapsActivity.this, "unable to get current location", Toast.LENGTH_SHORT).show();
+        switch (requestCode) {
+            case LOCATION_PERMISSION_REQUEST_CODE: {
+                if (grantResults.length > 0) {
+                    for (int i = 0; i < grantResults.length; i++) {
+                        if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                            mLocationPermissionsGranted = false;
+                            Log.d(TAG, "onRequestPermissionsResult: permission failed");
+                            return;
                         }
                     }
-                });
+                    Log.d(TAG, "onRequestPermissionsResult: permission granted");
+                    mLocationPermissionsGranted = true;
+                    //initialize our map
+                    initMap();
+                }
             }
-        } catch (SecurityException e) {
-            Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage());
         }
     }
 
-    private void hideSoftKeyboard() {
-        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        input_search.setEnabled(true);
+
     }
 }
